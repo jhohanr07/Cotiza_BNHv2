@@ -1107,9 +1107,7 @@ function CalculadoraFinanciamientoBNH() {
                       </span>
                     </p>
                     <p>
-                      c. Inicial de 18%
-                      (aplica 2% de
-                      comisión).
+                      
                     </p>
                   </div>
                 ) : (
