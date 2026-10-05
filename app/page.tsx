@@ -948,6 +948,12 @@ function CalculadoraFinanciamientoBNH() {
         totalToPay: calculations.totalToPay,
         ivaFinancing,
         ivaToPay: calculations.ivaToPayField,
+        contadoPrecio,
+        contadoIva,
+        contadoTotal,
+        contadoAjustePct: ajustarIva
+          ? Math.round(AJUSTE_IVA_DESCUENTO * 100)
+          : 0,
         logoUrl: `${window.location.origin}/logo-bnh.jpeg`,
       });
 
