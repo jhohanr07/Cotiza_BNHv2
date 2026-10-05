@@ -1114,10 +1114,7 @@ function CalculadoraFinanciamientoBNH() {
                   </div>
                 ) : (
                   <p className="mt-2 text-xs text-gray-500">
-                    
-                    {formatCurrency(
-                      suggestedInitialAmount
-                    )}
+                   
                   </p>
                 )}
               </div>
