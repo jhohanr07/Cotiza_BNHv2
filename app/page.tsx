@@ -1076,7 +1076,7 @@ function CalculadoraFinanciamientoBNH() {
                 />
 
                 <p className="mt-2 text-xs text-gray-500">
-                  Inicial mínima {formatCurrency(MIN_INITIAL_AMOUNT)}
+                  Inicial mínima 
                 </p>
 
                 {categoryConfig?.hasCommissionNote ? (
