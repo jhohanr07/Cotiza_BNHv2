@@ -1076,8 +1076,7 @@ function CalculadoraFinanciamientoBNH() {
                 />
 
                 <p className="mt-2 text-xs text-gray-500">
-                  Inicial mínima {formatCurrency(MIN_INITIAL_AMOUNT)} · solo
-                  montos enteros (5000, 5500, 6000…)
+                  Inicial mínima {formatCurrency(MIN_INITIAL_AMOUNT)}
                 </p>
 
                 {categoryConfig?.hasCommissionNote ? (
@@ -1116,7 +1115,7 @@ function CalculadoraFinanciamientoBNH() {
                 ) : (
                   <p className="mt-2 text-xs text-gray-500">
                     Inicial sugerida
-                    25%:{" "}
+                    :{" "}
                     {formatCurrency(
                       suggestedInitialAmount
                     )}
