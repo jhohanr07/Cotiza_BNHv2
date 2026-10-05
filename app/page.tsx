@@ -23,45 +23,45 @@ import {
 } from "@/lib/apps-script-api";
 
 const CATEGORIES = {
-//  dp: {
-//    label: "Línea DP y TE Air",
-//    minAnnualRate: 0.4,
-//    maxInstallments: 12,
-//    canPayVATSeparately: false,
-//    minInitialRate: 0.2,
-//    hasCommissionNote: false,
+ dp: {
+    label: "Línea DP y TE Air",
+    minAnnualRate: 0.4,
+    maxInstallments: 12,
+    canPayVATSeparately: false,
+    minInitialRate: 0.2,
+    hasCommissionNote: false,
   },
-//  mx: {
-//    label: "Línea MX",
-//    minAnnualRate: 0.3,
-//    maxInstallments: 15,
-//    canPayVATSeparately: true,
-//    minInitialRate: 0.2,
-//    hasCommissionNote: false,
+  mx: {
+    label: "Línea MX",
+    minAnnualRate: 0.3,
+    maxInstallments: 15,
+    canPayVATSeparately: true,
+    minInitialRate: 0.2,
+    hasCommissionNote: false,
   },
-//  consonaN5N7: {
-//    label: "Línea Consona N5-N7",
-//    minAnnualRate: 0.3,
-//    maxInstallments: 18,
-//    canPayVATSeparately: true,
-//    minInitialRate: 0.2,
-//    hasCommissionNote: false,
+  consonaN5N7: {
+    label: "Línea Consona N5-N7",
+    minAnnualRate: 0.3,
+    maxInstallments: 18,
+    canPayVATSeparately: true,
+    minInitialRate: 0.2,
+    hasCommissionNote: false,
   },
-//  consonaN8N9: {
-//    label: "Línea Consona N8-N9",
-//    minAnnualRate: 0.3,
-//    maxInstallments: 18,
-//    canPayVATSeparately: true,
-//    minInitialRate: 0.2,
-//    hasCommissionNote: false,
+  consonaN8N9: {
+    label: "Línea Consona N8-N9",
+    minAnnualRate: 0.3,
+    maxInstallments: 18,
+    canPayVATSeparately: true,
+    minInitialRate: 0.2,
+    hasCommissionNote: false,
   },
-  //alta: {
-   // label: "Alta Gama",
-   // minAnnualRate: 0.2,
-   // maxInstallments: 24,
-   // canPayVATSeparately: true,
-  //  minInitialRate: 0.2,
-  //  hasCommissionNote: false,
+  alta: {
+   label: "Alta Gama",
+   minAnnualRate: 0.2,
+   maxInstallments: 24,
+   canPayVATSeparately: true,
+   minInitialRate: 0.2,
+   hasCommissionNote: false,
   },
   congresoMX: {
     label: "Congreso Cardiologìa",
@@ -73,13 +73,13 @@ const CATEGORIES = {
     minInitialRate: 0.2,
     hasCommissionNote: true,
   },
- // congresoConsona: {
-   // label: "Congreso Consona",
-  //  minAnnualRate: 0.2,
-   // maxInstallments: 18,
-    //canPayVATSeparately: true,
-    //minInitialRate: 0.18,
-   // hasCommissionNote: true,
+  congresoConsona: {
+  label: "Congreso Consona",
+   minAnnualRate: 0.2,
+   maxInstallments: 18,
+   canPayVATSeparately: true,
+   minInitialRate: 0.18,
+   hasCommissionNote: true,
   },
 } as const;
 
