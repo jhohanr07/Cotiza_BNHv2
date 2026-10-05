@@ -88,6 +88,8 @@ const IGTF_RATE = 0.03;
 const MIN_INITIAL_RATE = 0.2;
 const SUGGESTED_INITIAL_RATE = 0.25;
 const ACCESS_PASSWORD = "BNH2026";
+// Descuento visual sobre el I.V.A. del panel de Contado (interruptor "Ajustar")
+const AJUSTE_IVA_DESCUENTO = 0.35;
 
 type PaymentMode = "si" | "no";
 
@@ -461,6 +463,9 @@ function CalculadoraFinanciamientoBNH() {
   const [installments, setInstallments] =
     useState("");
 
+  // Interruptor "Ajustar": solo afecta lo que se muestra en el panel de Contado
+  const [ajustarIva, setAjustarIva] = useState(false);
+
   // --- Base de datos de equipos (Google Sheet vía Apps Script) ---
   const [equipos, setEquipos] = useState<Equipo[]>([]);
   const [selectedEquipoId, setSelectedEquipoId] = useState("");
@@ -624,6 +629,15 @@ function CalculadoraFinanciamientoBNH() {
 
     return safeBase + vatAmount;
   }, [numericBase, vatAmount]);
+
+  const contadoPrecio =
+    Number.isFinite(numericBase) && numericBase > 0 ? numericBase : 0;
+
+  const contadoIva = ajustarIva
+    ? vatAmount * (1 - AJUSTE_IVA_DESCUENTO)
+    : vatAmount;
+
+  const contadoTotal = contadoPrecio + contadoIva;
 
   const igtfAmount = useMemo(() => {
     return totalWithVat * IGTF_RATE;
@@ -889,6 +903,7 @@ function CalculadoraFinanciamientoBNH() {
     setInitialAmount("");
     setIvaFinancing("si");
     setInstallments("");
+    setAjustarIva(false);
     setSelectedEquipoId("");
     setSendQuoteError("");
     setSendQuoteSuccess("");
@@ -1454,6 +1469,65 @@ function CalculadoraFinanciamientoBNH() {
             </CardHeader>
 
             <CardContent>
+              {/* ===== CONTADO ===== */}
+              <div className="mb-6 rounded-3xl border border-gray-200 bg-gray-50 p-5">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    De contado
+                  </h3>
+
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={ajustarIva}
+                    onClick={() => setAjustarIva((v) => !v)}
+                    className="flex items-center gap-2 text-sm font-semibold text-gray-700"
+                  >
+                    <span>Ajustar</span>
+                    <span
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        ajustarIva ? "bg-[#0d6f91]" : "bg-gray-300"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+                          ajustarIva ? "translate-x-5" : "translate-x-0.5"
+                        }`}
+                      />
+                    </span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
+                  <Item
+                    label="Precio del equipo"
+                    value={formatCurrency(contadoPrecio)}
+                  />
+
+                  <Item
+                    label={
+                      ajustarIva
+                        ? `I.V.A. (ajuste -${Math.round(
+                            AJUSTE_IVA_DESCUENTO * 100
+                          )}%)`
+                        : "I.V.A."
+                    }
+                    value={formatCurrency(contadoIva)}
+                  />
+
+                  <Item
+                    label="Total"
+                    value={formatCurrency(contadoTotal)}
+                  />
+                </div>
+              </div>
+
+              {/* ===== CRÉDITO ===== */}
+              <div className="rounded-3xl border border-gray-200 bg-gray-50 p-5">
+              <h3 className="mb-4 text-xl font-bold text-gray-900">
+                Crédito
+              </h3>
+
               <div className="mb-4 rounded-3xl bg-[#0b0b0b] p-8 text-white shadow-lg">
                 <p className="text-base font-medium text-gray-300">
                   Cuota mensual
@@ -1508,6 +1582,7 @@ function CalculadoraFinanciamientoBNH() {
                     calculations.totalToPay
                   )}
                 />
+              </div>
               </div>
 
               <Button
