@@ -97,7 +97,7 @@ const FINANCING_FACTOR_SHORT = 0.2;
 const FINANCING_FACTOR_LONG = 0.25;
 
 // Inicial mínima absoluta (USD) y paso de redondeo para la inicial sugerida
-const MIN_INITIAL_AMOUNT = 5000;
+const MIN_INITIAL_AMOUNT = 3500;
 const INITIAL_STEP = 500;
 // Descuento visual sobre el I.V.A. del panel de Contado (interruptor "Ajustar")
 const AJUSTE_IVA_DESCUENTO = 0.35;
