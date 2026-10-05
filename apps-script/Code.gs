@@ -347,6 +347,7 @@ function buildQuoteEmailHtml_(data) {
     '<table style="border-collapse:collapse; width:100%; max-width:480px;">' +
     row_("Equipo", escapeHtml_(data.equipo)) +
     row_("Categoría", escapeHtml_(data.categoria)) +
+    contadoEmailRows_(data) +
     row_("Base imponible", formatMoney_(data.basePrice)) +
     row_("Monto inicial", formatMoney_(data.initialAmount)) +
     row_("Cantidad de cuotas", String(Number(data.installments) || 0)) +
@@ -356,6 +357,19 @@ function buildQuoteEmailHtml_(data) {
     '<p style="margin-top:16px;">Vendedor a cargo: <strong>' + escapeHtml_(data.vendedorName) + "</strong></p>" +
     '<p style="color:#888; font-size:12px;">Esta propuesta es una simulación comercial y puede variar según las condiciones finales de la operación.</p>' +
     "</div>"
+  );
+}
+
+function contadoEmailRows_(data) {
+  if (!hasContado_(data)) return "";
+  var ajuste = Number(data.contadoAjustePct) || 0;
+  var ivaLabel = ajuste > 0 ? "I.V.A. (ajuste -" + ajuste + "%)" : "I.V.A. (16%)";
+  return (
+    '<tr><td colspan="2" style="padding:8px 0 2px; font-weight:bold; color:' + BRAND_COLOR + ';">De contado</td></tr>' +
+    row_("Precio del equipo", formatMoney_(data.contadoPrecio)) +
+    row_(ivaLabel, formatMoney_(data.contadoIva)) +
+    row_("Total de contado", "<strong>" + formatMoney_(data.contadoTotal) + "</strong>") +
+    '<tr><td colspan="2" style="padding:12px 0 2px; font-weight:bold; color:' + BRAND_COLOR + ';">Crédito</td></tr>'
   );
 }
 
@@ -494,8 +508,39 @@ function appendProductTable_(body, data) {
   }
 }
 
+function scenarioTitle_(body, text) {
+  var t = body.appendParagraph(text);
+  t.setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
+  t.setBold(true).setFontSize(12).setForegroundColor(BRAND_COLOR);
+  t.setSpacingBefore(10).setSpacingAfter(2);
+}
+
+function hasContado_(data) {
+  return (
+    data.contadoTotal !== undefined &&
+    data.contadoTotal !== null &&
+    data.contadoTotal !== ""
+  );
+}
+
 function appendSummary_(body, data) {
   body.appendParagraph("").setSpacingAfter(2);
+
+  // Escenario 1: De contado (solo si el front envió los datos)
+  if (hasContado_(data)) {
+    var ajuste = Number(data.contadoAjustePct) || 0;
+    var ivaContadoLabel = ajuste > 0
+      ? "I.V.A. (ajuste -" + ajuste + "%)"
+      : "I.V.A. (16%)";
+
+    scenarioTitle_(body, "DE CONTADO");
+    summaryLine_(body, "Precio del equipo", formatMoney_(data.contadoPrecio), false);
+    summaryLine_(body, ivaContadoLabel, formatMoney_(data.contadoIva), false);
+    summaryLine_(body, "TOTAL DE CONTADO", formatMoney_(data.contadoTotal), true);
+
+    // Escenario 2: Crédito
+    scenarioTitle_(body, "CRÉDITO");
+  }
 
   summaryLine_(body, "Subtotal", formatMoney_(data.basePrice), false);
 
