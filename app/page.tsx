@@ -70,7 +70,7 @@ const CATEGORIES = {
     minAnnualRate: 0.25,
     maxInstallments: 18,
     canPayVATSeparately: true,
-    minInitialRate: 0.18,
+    minInitialRate: 0.2,
     hasCommissionNote: true,
   },
  // congresoConsona: {
