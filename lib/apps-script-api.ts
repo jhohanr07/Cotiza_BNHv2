@@ -6,28 +6,39 @@
 // Ver apps-script/README.md para el paso a paso de despliegue.
 
 export type Equipo = {
-  /** Identificador único (fila de la hoja); la columna ID de la hoja se repite por línea. */
+  /** Identificador único (número de fila de la hoja); la columna ID de la hoja se repite por línea. */
   id: string;
-  /** Valor de la columna "ID" de la hoja (TeAir, MX, N7, N8, Resona i9...). */
+  /** Columna "ID" de la hoja (TeAir, MX, N7, N8, Resona i9...). */
   linea: string;
+  /** Columna "Nombre". */
   nombre: string;
+  /** Columna "Categoria". */
   categoria: string;
   /** Columna "Credito": precio para el escenario de crédito (base imponible). */
   credito: number;
-  /** Columna "Contado": precio para el escenario de contado. */
+  /** Columna "Equipo" (también acepta "Contado"): precio para el escenario de contado. */
   contado: number;
   /** Columna "Base ajustada". */
   baseAjustada: number;
-  /** Columna "2IVA" / "IVA ajustado" (columna G de la hoja). */
+  /** Columna "2IVA" (también acepta "IVA ajustado"). */
   ivaAjustado: number;
 };
 
-export type TasaPorPlazo = { meses: number; tasa: number };
+export type TasaPorPlazo = {
+  meses: number;
+  /** Tasa mensual como fracción (0.0153 = 1,53% mensual). */
+  tasa: number;
+};
 
 /**
  * Condiciones de una categoría, leídas de la hoja "CATEGORIA".
  * Los porcentajes llegan como fracción (0.2 = 20%). Los campos null
  * significan que la hoja no trae esa columna / está vacía.
+ *
+ * - `tasas` solo incluye los plazos disponibles: los que dicen "Sin calculo"
+ *   o están vacíos en la hoja no aparecen.
+ * - `maxInstallments` es el plazo más largo disponible en `tasas` (o el valor
+ *   de la columna opcional "Cuotas maximas" si existe).
  */
 export type CategoriaConfig = {
   nombre: string;
@@ -58,6 +69,8 @@ export type QuotePayload = {
   contadoPrecio?: number;
   contadoIva?: number;
   contadoTotal?: number;
+  /** Porcentaje de ajuste aplicado al IVA de contado (ej. 20 = -20%). */
+  contadoAjustePct?: number;
   // Monto ajustado (botón "Ajustado"): base ajustada + 2IVA de la lista
   ajustado?: boolean;
   ajustadoBase?: number;
@@ -85,8 +98,8 @@ function getAppsScriptUrl(): string {
 }
 
 /**
- * Obtiene el catálogo de equipos (nombre, categoría, precios de crédito y contado,
- * base ajustada y 2IVA) desde la hoja "PRECIO EQUIPOS" del Google Sheet configurado como base de datos.
+ * Obtiene el catálogo de equipos desde la hoja "PRECIO EQUIPOS"
+ * (ID, Nombre, Categoria, Equipo/contado, Credito, Base ajustada, 2IVA).
  */
 export async function fetchEquipos(): Promise<Equipo[]> {
   const baseUrl = getAppsScriptUrl();
@@ -134,8 +147,8 @@ export async function fetchVendedores(): Promise<string[]> {
 
 /**
  * Obtiene las condiciones de cada categoría (inicial mínima y sugerida,
- * cuotas máximas, interés por meses de financiamiento) desde la hoja
- * "CATEGORIA". La columna A de esa hoja alimenta el desplegable de categoría.
+ * cuotas máximas, interés mensual por plazo) desde la hoja "CATEGORIA".
+ * La columna A de esa hoja alimenta el desplegable de categoría.
  */
 export async function fetchCategorias(): Promise<CategoriaConfig[]> {
   const baseUrl = getAppsScriptUrl();
